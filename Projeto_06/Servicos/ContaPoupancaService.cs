@@ -39,8 +39,6 @@ namespace Projeto_06.Servicos
                 Console.WriteLine("----------------");
             }
         }
-
-
         public void MenuConta()
         {
             bool MenuContaPoupanca = true;
@@ -54,7 +52,7 @@ namespace Projeto_06.Servicos
                 Console.WriteLine("2 - Editar conta");
                 Console.WriteLine("3 - Listar todas as contas");
                 Console.WriteLine("4 - Consultar conta");
-                Console.WriteLine("5 - Sair");
+                Console.WriteLine("5 - Voltar");
                 string escolha = Console.ReadLine();
                 switch (escolha)
                 {
@@ -76,6 +74,7 @@ namespace Projeto_06.Servicos
                     case "4":
                         Console.Clear();
                         Console.WriteLine("Consultar conta");
+                        ConsultaConta();
                         break;
                     case "5":
                         Console.WriteLine("Voltando ao Menu Principal");
@@ -89,7 +88,6 @@ namespace Projeto_06.Servicos
                 }
             }
         }
-
         public void ConsultaConta()
         {
             Console.WriteLine("Digite a Conta que deseja consultar: ");
@@ -110,7 +108,6 @@ namespace Projeto_06.Servicos
 
             EscolhaFuncionalidades(conta);
         }
-
         public void EscolhaFuncionalidades(ContaPoupanca conta)
         {
             Console.WriteLine("Digite a Funcionalidade desejada: ");

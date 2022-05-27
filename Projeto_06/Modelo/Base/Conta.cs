@@ -4,7 +4,7 @@
     {
         public int Agencia { get; set; }
         public int NumeroDaConta { get; set; }
-        public string Correntista { get; set; }
+        public Cliente Correntista { get; set; }
         public double Saldo { get; protected set; }
         public int QuantidadeContas { get; set; }
 

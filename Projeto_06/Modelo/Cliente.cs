@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Projeto_06
 {
     public class Cliente
     {
-        string Nome { get; set; }
-        string CPF { get; set; }
-        string RG { get; set; }
-        string Endereco { get; set; }
+        public string Nome { get; set; }
+        public string CPF { get; set; }
+        public string RG { get; set; }
+        public string Endereco { get; set; }
 
         //List<Cliente> clientes = new List<Cliente>();
         public void MenuCliente()

@@ -24,7 +24,18 @@ namespace Projeto_06.Servicos
             Console.WriteLine("Numero: ");
             cc.NumeroDaConta = int.Parse(Console.ReadLine());
             Console.WriteLine("Correntista: ");
-            cc.Correntista = Console.ReadLine();
+
+            Cliente cliente = new Cliente();
+            Console.Write("Nome: ");
+            cliente.Nome = Console.ReadLine();
+            Console.Write("CPF: ");
+            cliente.CPF = Console.ReadLine();
+            Console.Write("RG: ");
+            cliente.RG = Console.ReadLine();
+            Console.Write("Endereco: ");
+            cliente.Endereco = Console.ReadLine();
+            cc.Correntista = cliente;
+
             Console.WriteLine("Saldo: ");
             //Gerar um saldo aleatorio.
             cc.Deposita(new Random().NextDouble() * 1000000);
@@ -39,7 +50,7 @@ namespace Projeto_06.Servicos
             {
                 Console.WriteLine("Agencia: " + conta.Agencia);
                 Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                Console.WriteLine("Correntista: " + conta.Correntista);
+                Console.WriteLine("Correntista: " + conta.Correntista.Nome);
                 Console.WriteLine("Saldo: " + conta.Saldo);
                 Console.WriteLine("----------------");
             }

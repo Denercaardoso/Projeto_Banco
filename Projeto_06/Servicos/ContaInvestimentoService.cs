@@ -23,7 +23,18 @@ namespace Projeto_06.Servicos
             Console.WriteLine("Numero: ");
             ci.NumeroDaConta = int.Parse(Console.ReadLine());
             Console.WriteLine("Correntista: ");
-            ci.Correntista = Console.ReadLine();
+
+            Cliente cliente = new Cliente();
+            Console.Write("Nome: ");
+            cliente.Nome = Console.ReadLine();
+            Console.Write("CPF: ");
+            cliente.CPF = Console.ReadLine();
+            Console.Write("RG: ");
+            cliente.RG = Console.ReadLine();
+            Console.Write("Endereco: ");
+            cliente.Endereco = Console.ReadLine();
+            ci.Correntista = cliente;
+
             Console.WriteLine("Saldo: ");
             ci.Deposita(new Random().NextDouble() * 1000000);
             contasInvestimentos.Add(ci);
@@ -36,7 +47,7 @@ namespace Projeto_06.Servicos
             {
                 Console.WriteLine("Agencia: " + conta.Agencia);
                 Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                Console.WriteLine("Correntista: " + conta.Correntista);
+                Console.WriteLine("Correntista: " + conta.Correntista.Nome);
                 Console.WriteLine("Saldo: " + conta.Saldo);
                 Console.WriteLine("----------------");
             }

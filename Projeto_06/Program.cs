@@ -10,9 +10,9 @@ namespace Projeto_06
         static void Main(string[] args)
         {
             bool menuPrincipal = true;
-            ContaCorrenteService contaCorrenteService = new ContaCorrenteService();
-            ContaPoupancaService contaPoupancaService = new ContaPoupancaService();
-            ContaInvestimentoService contaInvestimentoService = new ContaInvestimentoService();
+            ContaCorrenteService contaCorrenteService = new();
+            ContaPoupancaService contaPoupancaService = new();
+            ContaInvestimentoService contaInvestimentoService = new();
 
             MenuPrincipal();
 
@@ -82,7 +82,6 @@ namespace Projeto_06
                 }
             }
 
-
             void Relatorios()
             {
                 bool Relatorio = true;
@@ -147,7 +146,6 @@ namespace Projeto_06
                 Console.WriteLine("Saldo em Caixa: R$ " + saldoEmCaixa.ToString("F2"));
                 Console.ReadLine();
                 MenuPrincipal();
-
             }
 
             void Correntistas()

@@ -63,7 +63,8 @@ namespace Projeto_06.Servicos
                 Console.WriteLine("2 - Editar conta");
                 Console.WriteLine("3 - Listar todas as contas");
                 Console.WriteLine("4 - Consultar conta");
-                Console.WriteLine("5 - Voltar");
+                Console.WriteLine("5 - Excluir conta");
+                Console.WriteLine("6 - Voltar");
                 string escolha = Console.ReadLine();
                 switch (escolha)
                 {
@@ -75,6 +76,7 @@ namespace Projeto_06.Servicos
                     case "2":
                         Console.Clear();
                         Console.WriteLine("Editar conta");
+                        EditarConta(ContasPoupancas);
                         break;
                     case "3":
                         Console.Clear();
@@ -88,6 +90,11 @@ namespace Projeto_06.Servicos
                         ConsultaConta();
                         break;
                     case "5":
+                        Console.Clear();
+                        Console.WriteLine("Excluir conta");
+                        ExcluirConta(ContasPoupancas);
+                        break;
+                    case "6":
                         Console.WriteLine("Voltando ao Menu Principal");
                         Console.ReadLine();
                         Console.Clear();
@@ -99,8 +106,47 @@ namespace Projeto_06.Servicos
                 }
             }
         }
-        public void ConsultaConta()
+        public void EditarConta(List<ContaPoupanca> ContasPoupancas)
         {
+            Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
+            Console.WriteLine("");
+            Console.Write("Informe o Numero da conta que deseja editar: ");
+            int numeroConta = int.Parse(Console.ReadLine());
+
+
+            ContaPoupanca cp = ContasPoupancas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            if (cp != null)
+            {
+                Console.Write("Digite o numero da agência: ");
+                cp.Agencia = int.Parse(Console.ReadLine());
+                Console.Write("Digite o nome do correntista: ");
+                cp.Correntista.Nome = Console.ReadLine();
+                Console.Write("Digite o Cpf do correntista: ");
+                cp.Correntista.CPF = Console.ReadLine();
+                Console.Write("Digite o RG do correntista: ");
+                cp.Correntista.RG = Console.ReadLine();
+                Console.Write("Digite o Endereço do correntista: ");
+                cp.Correntista.Endereco = Console.ReadLine();
+
+            }
+        }
+        public void ExcluirConta(List<ContaPoupanca> ContasPoupancas)
+        {
+            Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
+            Console.WriteLine("");
+            Console.Write("Informe o Numero da conta que deseja excluir: ");
+            int numeroConta = int.Parse(Console.ReadLine());
+
+            ContaPoupanca cp = ContasPoupancas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            if (cp != null)
+            {
+                ContasPoupancas.Remove(cp);
+            }
+        }
+        public void ConsultaConta()
+            {
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 

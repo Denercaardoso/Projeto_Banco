@@ -69,7 +69,8 @@ namespace Projeto_06.Servicos
                 Console.WriteLine("2 - Editar conta");
                 Console.WriteLine("3 - Listar todas as contas");
                 Console.WriteLine("4 - Consultar conta");
-                Console.WriteLine("5 - Voltar");
+                Console.WriteLine("5 - Excluir conta");
+                Console.WriteLine("6 - Voltar");
                 string escolha = Console.ReadLine();
                 switch (escolha)
                 {
@@ -80,6 +81,7 @@ namespace Projeto_06.Servicos
                         break;
                     case "2":
                         Console.WriteLine("Editar conta");
+                        EditarConta(ContasCorrentes);
                         break;
                     case "3":
                         Console.Clear();
@@ -93,6 +95,11 @@ namespace Projeto_06.Servicos
                         ConsultaConta();
                         break;
                     case "5":
+                        Console.Clear();
+                        Console.WriteLine("Excluir conta");
+                        ExcluirConta(ContasCorrentes);
+                        break;
+                    case "6":
                         Console.WriteLine("Voltando ao Menu Principal");
                         Console.ReadLine();
                         Console.Clear();
@@ -102,6 +109,45 @@ namespace Projeto_06.Servicos
                         Console.WriteLine("Opção Invalida!");
                         break;
                 }
+            }
+        }
+        public void EditarConta(List<ContaCorrente> ContasCorrentes)
+        {
+            Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
+            Console.WriteLine("");
+            Console.Write("Informe o Numero da conta que deseja editar: ");
+            int numeroConta = int.Parse(Console.ReadLine());
+
+
+            ContaCorrente cc = ContasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            if (cc != null)
+            {
+                Console.Write("Digite o numero da agência: ");
+                cc.Agencia = int.Parse(Console.ReadLine());
+                Console.Write("Digite o nome do correntista: ");
+                cc.Correntista.Nome = Console.ReadLine();
+                Console.Write("Digite o Cpf do correntista: ");
+                cc.Correntista.CPF = Console.ReadLine();
+                Console.Write("Digite o RG do correntista: ");
+                cc.Correntista.RG = Console.ReadLine();
+                Console.Write("Digite o Endereço do correntista: ");
+                cc.Correntista.Endereco = Console.ReadLine(); 
+
+            }
+        }
+        public void ExcluirConta(List<ContaCorrente> ContasCorrentes)
+        {
+            Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
+            Console.WriteLine("");
+            Console.Write("Informe o Numero da conta que deseja excluir: ");
+            int numeroConta = int.Parse(Console.ReadLine());
+
+            ContaCorrente cc = ContasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            if (cc != null)
+            {
+                ContasCorrentes.Remove(cc);
             }
         }
 

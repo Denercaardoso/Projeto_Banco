@@ -1,9 +1,10 @@
 ﻿using Projeto_06.Servicos;
 using System;
+using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Projeto_06
+namespace Projeto_06.Modelo.Dao
 {
     class Program
     {
@@ -13,6 +14,8 @@ namespace Projeto_06
             ContaCorrenteService contaCorrenteService = new();
             ContaPoupancaService contaPoupancaService = new();
             ContaInvestimentoService contaInvestimentoService = new();
+            Cliente cliente = new Cliente();
+            CrudBanco crudBanco = new CrudBanco();
 
             MenuPrincipal();
 
@@ -60,6 +63,7 @@ namespace Projeto_06
                         case "2":
                             Console.Clear();
                             Console.WriteLine("Dados dos Clientes");
+                            dadosDosClientes();
                             break;
                         case "3":
                             SaldoEmCaixa();
@@ -225,6 +229,100 @@ namespace Projeto_06
                 contas.AddRange(contasInvestimentos);
                 return contas;
             }
+
+            void dadosDosClientes()
+            {
+                bool dados = true;
+
+                while (dados)
+                {
+                    Console.Clear();
+                    Console.WriteLine("DADOS DOS CLIENTES");
+                    Console.WriteLine("Informe a opção desejada:");
+                    Console.WriteLine("1 - Inserir um novo cliente");
+                    Console.WriteLine("2 - Editar um cliente");
+                    Console.WriteLine("3 - Excluir um Cliente");
+                    Console.WriteLine("4 - Consultar todos os clientes");
+                    Console.WriteLine("5 - Consultar cliente pelo CPF");
+                    Console.WriteLine("6 - Sair");
+
+                    string escolha = Console.ReadLine();
+
+                    switch (escolha)
+                    {
+                        case "1":
+                            Console.Write("Digite seu nome: ");
+                            cliente.Nome = Console.ReadLine();
+                            Console.Write("Digite seu CPF (Neste formato = 000.000.000-00): ");
+                            cliente.CPF = Console.ReadLine();
+                            Console.Write("Digite seu RG (Neste formato = 0000000): ");
+                            cliente.RG = Console.ReadLine();
+                            Console.Write("Digite seu Endereço: ");
+                            cliente.Endereco = Console.ReadLine();
+
+                            crudBanco.InserirCliente(cliente);
+                            break;
+                        case "2":
+                            Console.Write("Digite o CPF do cliente que deseja alterar(000.000.000-00): ");
+                            cliente.CPF = Console.ReadLine();
+                            Console.Write("Digite o nome do cliente: ");
+                            cliente.Nome = Console.ReadLine();
+                            Console.Write("Digite seu RG (Neste formato = 0000000): ");
+                            cliente.RG = Console.ReadLine();
+                            Console.Write("Digite seu Endereço: ");
+                            cliente.Endereco = Console.ReadLine();
+
+                            crudBanco.EditarCliente(cliente);
+                            break;
+                        case "3":
+                            Console.Write("Informe o CPF que deseja excluir (000.000.000-00): ");
+                            cliente.CPF = Console.ReadLine();
+                            crudBanco.ExcluirCliente(cliente);
+                            break;
+                        case "4":
+                            Console.Clear();
+                            Console.WriteLine("Consultar todos os clientes");
+                            foreach (Cliente clientes in crudBanco.listarTodosClientes())
+                            {
+                                Console.WriteLine("Nome: " + clientes.Nome);
+                                Console.WriteLine("CPF: " + clientes.CPF);
+                                Console.WriteLine("RG: " + clientes.RG);
+                                Console.WriteLine("Endereço: " + clientes.Endereco);
+                                Console.WriteLine("----------------");
+                            }
+                            Console.ReadKey();
+                            break;
+                        case "5":
+                            Console.Clear(); ;
+                            Console.Write("Consultar por cpf: ");
+                            string cpf = Console.ReadLine();
+                            Console.WriteLine("");
+
+                            foreach (Cliente clientes in crudBanco.listarClientesPorCpf(cpf))
+                            {
+                                Console.WriteLine("Nome: " + clientes.Nome);
+                                Console.WriteLine("CPF: " + clientes.CPF);
+                                Console.WriteLine("RG: " + clientes.RG);
+                                Console.WriteLine("Endereço: " + clientes.Endereco);
+                                Console.WriteLine("----------------");
+                            }
+
+                            Console.ReadKey();
+                            break;
+                        case "6":
+                            Console.Clear();
+                            Console.WriteLine("Voltando ao Menu Principal");
+                            Console.ReadLine();
+                            Console.Clear();
+                            dados = false;
+                            break;
+                        default:
+                            Console.WriteLine("Opção Invalida!");
+                            break;
+                    }
+                }
+            }
+
         }
     }
 }

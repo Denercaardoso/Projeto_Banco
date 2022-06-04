@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projeto_06.Dao;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +35,18 @@ namespace Projeto_06.Servicos
             cliente.RG = Console.ReadLine();
             Console.Write("Endereco: ");
             cliente.Endereco = Console.ReadLine();
+
+
+            ClienteDao clienteDao = new ClienteDao();
+            cliente.Id = clienteDao.Inserir(cliente);
+
             cc.Correntista = cliente;
+            ContaDao contaDao = new ContaDao();
+            contaDao.Inserir(cc);
+
+            //Verificar Essa Linha
+            //ContaCorrenteDao contaCorrenteDao = new ContaCorrenteDao();
+            //cliente.Id = contaCorrenteDao.Inserir
 
             Console.WriteLine("Saldo: ");
             //Gerar um saldo aleatorio.
@@ -132,7 +144,7 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o RG do correntista: ");
                 cc.Correntista.RG = Console.ReadLine();
                 Console.Write("Digite o Endereço do correntista: ");
-                cc.Correntista.Endereco = Console.ReadLine(); 
+                cc.Correntista.Endereco = Console.ReadLine();
 
             }
         }

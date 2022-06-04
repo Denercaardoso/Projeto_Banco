@@ -156,7 +156,7 @@ namespace Projeto_06.Modelo.Dao
             {
                 var contas = pegaTodasContas();
                 //Listar correntista em primeiro lugar
-                var contasAcima500kOrdenado = contas.OrderBy(item => item.Correntista)
+                var contasAcima500kOrdenado = contas.OrderBy(item => item.Cliente)
                 //Thenby em caso de correntista igual, pega pelo maior saldo.
                     .ThenByDescending(item => item.Saldo);
 
@@ -164,7 +164,7 @@ namespace Projeto_06.Modelo.Dao
                 {
                     Console.WriteLine("Agencia: " + conta.Agencia);
                     Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                    Console.WriteLine("Correntista: " + conta.Correntista);
+                    Console.WriteLine("Correntista: " + conta.Cliente);
                     Console.WriteLine("Saldo: R$" + conta.Saldo);
                     Console.WriteLine("----------------");
 
@@ -183,7 +183,7 @@ namespace Projeto_06.Modelo.Dao
                 {
                     Console.WriteLine("Agencia: " + conta.Agencia);
                     Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                    Console.WriteLine("Correntista: " + conta.Correntista);
+                    Console.WriteLine("Correntista: " + conta.Cliente);
                     Console.WriteLine("Saldo: R$" + conta.Saldo);
                     Console.WriteLine("----------------");
 
@@ -205,7 +205,7 @@ namespace Projeto_06.Modelo.Dao
                 {
                     Console.WriteLine("Agencia: " + conta.Agencia);
                     Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                    Console.WriteLine("Correntista: " + conta.Correntista);
+                    Console.WriteLine("Correntista: " + conta.Cliente);
                     Console.WriteLine("Saldo: " + conta.Saldo);
                     Console.WriteLine("----------------");
 

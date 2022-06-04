@@ -7,18 +7,19 @@ namespace Projeto_06.Dao
     {
         Conexao conexao = new Conexao();
         SqlCommand sqlCommand = new SqlCommand();
-        public void Inserir(Conta conta)
+        public int Inserir(Conta conta)
         {
-            sqlCommand.CommandText = "INSERT INTO dbo.CONTAS VALUES (@Agencia, @Numero, @Saldo, @Id_Cliente);";
+            sqlCommand.CommandText = "INSERT INTO dbo.CONTAS VALUES (@Agencia, @Numero, @Saldo, @Id_Cliente); SELECT SCOPE_IDENTITY();";
             sqlCommand.Parameters.AddWithValue("@Agencia", conta.Agencia);
             sqlCommand.Parameters.AddWithValue("@Numero", conta.NumeroDaConta);
             sqlCommand.Parameters.AddWithValue("@Saldo", conta.Saldo);
-            sqlCommand.Parameters.AddWithValue("@ID_Cliente", conta.Correntista.Id);
+            sqlCommand.Parameters.AddWithValue("@ID_Cliente", conta.Cliente.Id);
 
             try
             {
                 sqlCommand.Connection = conexao.Conectar();
-                sqlCommand.ExecuteNonQuery();
+                int id = Convert.ToInt32(sqlCommand.ExecuteScalar());
+                return id;
             }
             catch (SqlException e)
             {
@@ -28,7 +29,7 @@ namespace Projeto_06.Dao
             {
                 conexao.Desconectar();
             }
-
+            return 0;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projeto_06.Dao;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,7 +33,18 @@ namespace Projeto_06.Servicos
             cliente.RG = Console.ReadLine();
             Console.Write("Endereco: ");
             cliente.Endereco = Console.ReadLine();
-            cp.Correntista = cliente;
+            cp.Cliente = cliente;
+
+            ClienteDao clienteDao = new ClienteDao();
+            cliente.Id = clienteDao.Inserir(cliente);
+
+            cp.Cliente = cliente;
+
+            ContaDao contaDao = new ContaDao();
+            cp.Id = contaDao.Inserir(cp);
+
+            ContaPoupancaDao contaPoupancaDao = new();
+            contaPoupancaDao.Inserir(cp);
 
             Console.WriteLine("Saldo: ");
             cp.Deposita(new Random().NextDouble() * 1000000);
@@ -41,11 +53,14 @@ namespace Projeto_06.Servicos
         public void MostrarContaPoupanca(List<ContaPoupanca> contasPoupancas)
         {
             Console.WriteLine("-----CONTAS POUPANÇAS-----");
-            foreach (var conta in contasPoupancas)
+            ContaPoupancaDao contaPoupancaDao = new();
+            var listarCP = contaPoupancaDao.listarCP();
+
+            foreach (var conta in listarCP)
             {
                 Console.WriteLine("Agencia: " + conta.Agencia);
                 Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                Console.WriteLine("Correntista: " + conta.Correntista.Nome);
+                Console.WriteLine("Correntista: " + conta.Cliente.Nome);
                 Console.WriteLine("Saldo: " + conta.Saldo);
                 Console.WriteLine("----------------");
             }
@@ -121,13 +136,13 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o numero da agência: ");
                 cp.Agencia = int.Parse(Console.ReadLine());
                 Console.Write("Digite o nome do correntista: ");
-                cp.Correntista.Nome = Console.ReadLine();
+                cp.Cliente.Nome = Console.ReadLine();
                 Console.Write("Digite o Cpf do correntista: ");
-                cp.Correntista.CPF = Console.ReadLine();
+                cp.Cliente.CPF = Console.ReadLine();
                 Console.Write("Digite o RG do correntista: ");
-                cp.Correntista.RG = Console.ReadLine();
+                cp.Cliente.RG = Console.ReadLine();
                 Console.Write("Digite o Endereço do correntista: ");
-                cp.Correntista.Endereco = Console.ReadLine();
+                cp.Cliente.Endereco = Console.ReadLine();
 
             }
         }
@@ -146,7 +161,7 @@ namespace Projeto_06.Servicos
             }
         }
         public void ConsultaConta()
-            {
+        {
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 
@@ -158,7 +173,7 @@ namespace Projeto_06.Servicos
             }
 
             Console.WriteLine("--------DADOS--------");
-            Console.WriteLine("Correntista: " + conta.Correntista);
+            Console.WriteLine("Correntista: " + conta.Cliente);
             Console.WriteLine("Agencia: " + conta.Agencia);
             Console.WriteLine("Numero da conta: " + conta.NumeroDaConta);
             Console.WriteLine("-----------------------------");

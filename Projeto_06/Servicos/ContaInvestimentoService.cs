@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projeto_06.Dao;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,7 +34,18 @@ namespace Projeto_06.Servicos
             cliente.RG = Console.ReadLine();
             Console.Write("Endereco: ");
             cliente.Endereco = Console.ReadLine();
-            ci.Correntista = cliente;
+            ci.Cliente = cliente;
+
+            ClienteDao clienteDao = new ClienteDao();
+            cliente.Id = clienteDao.Inserir(cliente);
+
+            ci.Cliente = cliente;
+
+            ContaDao contaDao = new ContaDao();
+            ci.Id = contaDao.Inserir(ci);
+
+            ContaInventimentoDao contaInventimentoDao = new();
+            contaInventimentoDao.Inserir(ci);
 
             Console.WriteLine("Saldo: ");
             ci.Deposita(new Random().NextDouble() * 1000000);
@@ -43,11 +55,15 @@ namespace Projeto_06.Servicos
         public void MostrarContaInvestimento(List<ContaInvestimento> contasInvestimentos)
         {
             Console.WriteLine("-----CONTAS INVESTIMENTO-----");
-            foreach (var conta in contasInvestimentos)
+
+            ContaInventimentoDao contaInvestimentoDao = new();
+            var listarCI = contaInvestimentoDao.listarCI();
+
+            foreach (var conta in listarCI)
             {
                 Console.WriteLine("Agencia: " + conta.Agencia);
                 Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                Console.WriteLine("Correntista: " + conta.Correntista.Nome);
+                Console.WriteLine("Correntista: " + conta.Cliente.Nome);
                 Console.WriteLine("Saldo: " + conta.Saldo);
                 Console.WriteLine("----------------");
             }
@@ -124,13 +140,13 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o numero da agência: ");
                 ci.Agencia = int.Parse(Console.ReadLine());
                 Console.Write("Digite o nome do correntista: ");
-                ci.Correntista.Nome = Console.ReadLine();
+                ci.Cliente.Nome = Console.ReadLine();
                 Console.Write("Digite o Cpf do correntista: ");
-                ci.Correntista.CPF = Console.ReadLine();
+                ci.Cliente.CPF = Console.ReadLine();
                 Console.Write("Digite o RG do correntista: ");
-                ci.Correntista.RG = Console.ReadLine();
+                ci.Cliente.RG = Console.ReadLine();
                 Console.Write("Digite o Endereço do correntista: ");
-                ci.Correntista.Endereco = Console.ReadLine();
+                ci.Cliente.Endereco = Console.ReadLine();
 
             }
         }
@@ -161,7 +177,7 @@ namespace Projeto_06.Servicos
             }
 
             Console.WriteLine("--------DADOS--------");
-            Console.WriteLine("Correntista: " + conta.Correntista);
+            Console.WriteLine("Correntista: " + conta.Cliente);
             Console.WriteLine("Agencia: " + conta.Agencia);
             Console.WriteLine("Numero da conta: " + conta.NumeroDaConta);
             Console.WriteLine("-----------------------------");

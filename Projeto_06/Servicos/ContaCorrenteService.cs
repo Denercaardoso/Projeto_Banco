@@ -1,24 +1,16 @@
 ﻿using Projeto_06.Dao;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Projeto_06.Servicos
 {
     public class ContaCorrenteService
     {
-        public static List<ContaCorrente> ContasCorrentes { get; set; }
-
-        public ContaCorrenteService()
+        ContaCorrenteDao contaCorrenteDao = new ContaCorrenteDao();
+        public void AdicionarContaCorrente()
         {
-            if (ContasCorrentes == null)
-            {
-                ContasCorrentes = new List<ContaCorrente>();
-            }
-        }
 
-        public void AdicionarContaCorrente(List<ContaCorrente> contasCorrentes)
-        {
+
             ContaCorrente cc = new ContaCorrente();
             Console.WriteLine("Agência: ");
             cc.Agencia = int.Parse(Console.ReadLine());
@@ -37,32 +29,36 @@ namespace Projeto_06.Servicos
             cliente.Endereco = Console.ReadLine();
 
 
-            ClienteDao clienteDao = new ClienteDao();
+            ClienteDao clienteDao = new();
             cliente.Id = clienteDao.Inserir(cliente);
 
-            cc.Correntista = cliente;
-            ContaDao contaDao = new ContaDao();
-            contaDao.Inserir(cc);
+            cc.Cliente = cliente;
 
-            //Verificar Essa Linha
-            //ContaCorrenteDao contaCorrenteDao = new ContaCorrenteDao();
-            //cliente.Id = contaCorrenteDao.Inserir
+            ContaDao contaDao = new();
+            cc.Id = contaDao.Inserir(cc);
+
+            ContaCorrenteDao contaCorrenteDao = new();
+            contaCorrenteDao.Inserir(cc);
+
 
             Console.WriteLine("Saldo: ");
             //Gerar um saldo aleatorio.
             cc.Deposita(new Random().NextDouble() * 1000000);
-            contasCorrentes.Add(cc);
         }
 
-        public void MostrarContaCorrente(List<ContaCorrente> contasCorrentes)
+        public void MostrarContaCorrente()
         {
             Console.WriteLine("-----CONTAS CORRENTES-----");
             //Foi modificado com static e criado o contrutor get
-            foreach (var conta in ContaCorrenteService.ContasCorrentes)
+
+            //Buscar lista do Banco de dados através do método listaCC.
+            var listarCC = contaCorrenteDao.listarCC();
+
+            foreach (var conta in listarCC)
             {
                 Console.WriteLine("Agencia: " + conta.Agencia);
                 Console.WriteLine("Numero: " + conta.NumeroDaConta);
-                Console.WriteLine("Correntista: " + conta.Correntista.Nome);
+                Console.WriteLine("Correntista: " + conta.Cliente.Nome);
                 Console.WriteLine("Saldo: " + conta.Saldo);
                 Console.WriteLine("----------------");
             }
@@ -89,16 +85,16 @@ namespace Projeto_06.Servicos
                     case "1":
                         Console.Clear();
                         Console.WriteLine("Adicionar conta");
-                        AdicionarContaCorrente(ContasCorrentes);
+                        AdicionarContaCorrente();
                         break;
                     case "2":
                         Console.WriteLine("Editar conta");
-                        EditarConta(ContasCorrentes);
+                        EditarConta();
                         break;
                     case "3":
                         Console.Clear();
                         Console.WriteLine("Listar todas as contas");
-                        MostrarContaCorrente(ContasCorrentes);
+                        MostrarContaCorrente();
                         Console.ReadLine();
                         break;
                     case "4":
@@ -109,7 +105,7 @@ namespace Projeto_06.Servicos
                     case "5":
                         Console.Clear();
                         Console.WriteLine("Excluir conta");
-                        ExcluirConta(ContasCorrentes);
+                        ExcluirConta();
                         break;
                     case "6":
                         Console.WriteLine("Voltando ao Menu Principal");
@@ -123,52 +119,56 @@ namespace Projeto_06.Servicos
                 }
             }
         }
-        public void EditarConta(List<ContaCorrente> ContasCorrentes)
+        public void EditarConta()
         {
+            var contasCorrentes = contaCorrenteDao.listarCC();
+
             Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja editar: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
 
-            ContaCorrente cc = ContasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+            ContaCorrente cc = contasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (cc != null)
             {
                 Console.Write("Digite o numero da agência: ");
                 cc.Agencia = int.Parse(Console.ReadLine());
                 Console.Write("Digite o nome do correntista: ");
-                cc.Correntista.Nome = Console.ReadLine();
+                cc.Cliente.Nome = Console.ReadLine();
                 Console.Write("Digite o Cpf do correntista: ");
-                cc.Correntista.CPF = Console.ReadLine();
+                cc.Cliente.CPF = Console.ReadLine();
                 Console.Write("Digite o RG do correntista: ");
-                cc.Correntista.RG = Console.ReadLine();
+                cc.Cliente.RG = Console.ReadLine();
                 Console.Write("Digite o Endereço do correntista: ");
-                cc.Correntista.Endereco = Console.ReadLine();
+                cc.Cliente.Endereco = Console.ReadLine();
 
             }
         }
-        public void ExcluirConta(List<ContaCorrente> ContasCorrentes)
+        public void ExcluirConta()
         {
+            var contasCorrentes = contaCorrenteDao.listarCC();
             Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja excluir: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
-            ContaCorrente cc = ContasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+            ContaCorrente cc = contasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (cc != null)
             {
-                ContasCorrentes.Remove(cc);
+                contasCorrentes.Remove(cc);
             }
         }
 
         public void ConsultaConta()
         {
+            var contasCorrentes = contaCorrenteDao.listarCC();
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 
-            var conta = ContasCorrentes.FirstOrDefault(conta => conta.NumeroDaConta == valor);
+            var conta = contasCorrentes.FirstOrDefault(conta => conta.NumeroDaConta == valor);
             if (conta == null)
             {
                 Console.WriteLine("A conta desejada não existe");
@@ -176,7 +176,7 @@ namespace Projeto_06.Servicos
             }
 
             Console.WriteLine("--------DADOS--------");
-            Console.WriteLine("Correntista: " + conta.Correntista);
+            Console.WriteLine("Correntista: " + conta.Cliente);
             Console.WriteLine("Agencia: " + conta.Agencia);
             Console.WriteLine("Numero da conta: " + conta.NumeroDaConta);
             Console.WriteLine("-----------------------------");

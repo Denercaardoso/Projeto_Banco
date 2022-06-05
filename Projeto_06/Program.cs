@@ -1,6 +1,6 @@
-﻿using Projeto_06.Servicos;
+﻿using Projeto_06.Dao;
+using Projeto_06.Servicos;
 using System;
-using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +15,7 @@ namespace Projeto_06.Modelo.Dao
             ContaPoupancaService contaPoupancaService = new();
             ContaInvestimentoService contaInvestimentoService = new();
             Cliente cliente = new Cliente();
-            CrudBanco crudBanco = new CrudBanco();
+            ClienteDao clienteDao = new();
 
             MenuPrincipal();
 
@@ -217,11 +217,15 @@ namespace Projeto_06.Modelo.Dao
 
             List<Conta> pegaTodasContas()
             {
+                ContaCorrenteDao contaCorrenteDao = new();
+                ContaInvestimentoDao contaInventimentoDao = new();
+                ContaPoupancaDao contaPoupancaDao = new();
+
                 List<Conta> contas = new();
                 //.Where = Filtrar itens da lista == ToList: Transformar em lista.
-                var contaCorrentes = ContaCorrenteService.ContasCorrentes;
-                var contasPoupancas = ContaPoupancaService.ContasPoupancas;
-                var contasInvestimentos = ContaInvestimentoService.ContasInvestimentos;
+                var contaCorrentes = contaCorrenteDao.listarCC();
+                var contasPoupancas = contaPoupancaDao.listarCP();
+                var contasInvestimentos = contaInventimentoDao.listarCI();
 
                 //.AddRange: Adicionar listas. 
                 contas.AddRange(contaCorrentes);
@@ -260,7 +264,7 @@ namespace Projeto_06.Modelo.Dao
                             Console.Write("Digite seu Endereço: ");
                             cliente.Endereco = Console.ReadLine();
 
-                            crudBanco.InserirCliente(cliente);
+                            clienteDao.Inserir(cliente);
                             break;
                         case "2":
                             Console.Write("Digite o CPF do cliente que deseja alterar(000.000.000-00): ");
@@ -272,17 +276,23 @@ namespace Projeto_06.Modelo.Dao
                             Console.Write("Digite seu Endereço: ");
                             cliente.Endereco = Console.ReadLine();
 
-                            crudBanco.EditarCliente(cliente);
+                            clienteDao.Editar(cliente);
                             break;
                         case "3":
                             Console.Write("Informe o CPF que deseja excluir (000.000.000-00): ");
                             cliente.CPF = Console.ReadLine();
-                            crudBanco.ExcluirCliente(cliente);
+                            bool result = clienteDao.Excluir(cliente);
+                            if (result)
+                                Console.Write("CLiente apagado com sucesso!");
+                            else
+                                Console.Write("Não foi possivel deletar o cliente, pois possui uma conta vinculada!");
+
+                            Console.ReadKey();
                             break;
                         case "4":
                             Console.Clear();
                             Console.WriteLine("Consultar todos os clientes");
-                            foreach (Cliente clientes in crudBanco.listarTodosClientes())
+                            foreach (Cliente clientes in clienteDao.listarCliente())
                             {
                                 Console.WriteLine("Nome: " + clientes.Nome);
                                 Console.WriteLine("CPF: " + clientes.CPF);
@@ -298,7 +308,7 @@ namespace Projeto_06.Modelo.Dao
                             string cpf = Console.ReadLine();
                             Console.WriteLine("");
 
-                            foreach (Cliente clientes in crudBanco.listarClientesPorCpf(cpf))
+                            foreach (Cliente clientes in clienteDao.listarClientesPorCpf(cpf))
                             {
                                 Console.WriteLine("Nome: " + clientes.Nome);
                                 Console.WriteLine("CPF: " + clientes.CPF);

@@ -69,6 +69,28 @@ namespace Projeto_06.Dao
             }
             return listaContaPoupancas;
         }
+        public bool Excluir(int id)
+        {
+            sqlCommand.CommandText = "DELETE FROM CONTAPOUPANCA WHERE ID_Contas = @ID_Conta; " +
+                "DELETE FROM CONTAS WHERE ID =  @ID";
+            sqlCommand.Parameters.AddWithValue("@ID_Conta", id);
+            sqlCommand.Parameters.AddWithValue("@ID", id);
 
+            try
+            {
+                sqlCommand.Connection = conexao.Conectar();
+                sqlCommand.ExecuteNonQuery();
+                return true;
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro: " + e.Message);
+                return false;
+            }
+            finally
+            {
+                conexao.Desconectar();
+            }
+        }
     }
 }

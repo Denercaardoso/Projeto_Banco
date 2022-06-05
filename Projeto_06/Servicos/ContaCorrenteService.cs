@@ -6,10 +6,11 @@ namespace Projeto_06.Servicos
 {
     public class ContaCorrenteService
     {
-        ContaCorrenteDao contaCorrenteDao = new ContaCorrenteDao();
+        ContaDao _contaDao = new();
+
+        ContaCorrenteDao _contaCorrenteDao = new ContaCorrenteDao();
         public void AdicionarContaCorrente()
         {
-
 
             ContaCorrente cc = new ContaCorrente();
             Console.WriteLine("Agência: ");
@@ -52,7 +53,7 @@ namespace Projeto_06.Servicos
             //Foi modificado com static e criado o contrutor get
 
             //Buscar lista do Banco de dados através do método listaCC.
-            var listarCC = contaCorrenteDao.listarCC();
+            var listarCC = _contaCorrenteDao.listarCC();
 
             foreach (var conta in listarCC)
             {
@@ -121,13 +122,12 @@ namespace Projeto_06.Servicos
         }
         public void EditarConta()
         {
-            var contasCorrentes = contaCorrenteDao.listarCC();
+            var contasCorrentes = _contaCorrenteDao.listarCC();
 
             Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja editar: ");
             int numeroConta = int.Parse(Console.ReadLine());
-
 
             ContaCorrente cc = contasCorrentes.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
@@ -144,11 +144,14 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o Endereço do correntista: ");
                 cc.Cliente.Endereco = Console.ReadLine();
 
+                _contaDao.Editar(cc);
+
             }
         }
         public void ExcluirConta()
         {
-            var contasCorrentes = contaCorrenteDao.listarCC();
+
+            var contasCorrentes = _contaCorrenteDao.listarCC();
             Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja excluir: ");
@@ -159,12 +162,18 @@ namespace Projeto_06.Servicos
             if (cc != null)
             {
                 contasCorrentes.Remove(cc);
+                var result = _contaCorrenteDao.Excluir(cc.Id);
+                if (result)
+                    Console.WriteLine("Conta apagada com sucesso");
+                else
+                    Console.WriteLine("Não foi possivel apagar");
+                Console.ReadLine();
             }
         }
 
         public void ConsultaConta()
         {
-            var contasCorrentes = contaCorrenteDao.listarCC();
+            var contasCorrentes = _contaCorrenteDao.listarCC();
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 

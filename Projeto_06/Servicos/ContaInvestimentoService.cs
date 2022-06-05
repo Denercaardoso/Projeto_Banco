@@ -1,22 +1,16 @@
 ﻿using Projeto_06.Dao;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Projeto_06.Servicos
 {
-    class ContaInvestimentoService
+    public class ContaInvestimentoService
     {
-        public static List<ContaInvestimento> ContasInvestimentos { get; set; }
-        public ContaInvestimentoService()
-        {
-            if (ContasInvestimentos == null)
-            {
-                ContasInvestimentos = new List<ContaInvestimento>();
-            }
-        }
+        ContaDao _contaDao = new();
 
-        public void AdicionarContaInvestimento(List<ContaInvestimento> contasInvestimentos)
+        ContaInvestimentoDao contaInvestimentoDao = new ContaInvestimentoDao();
+
+        public void AdicionarContaInvestimento()
         {
             ContaInvestimento ci = new ContaInvestimento();
             Console.WriteLine("Agência: ");
@@ -44,19 +38,18 @@ namespace Projeto_06.Servicos
             ContaDao contaDao = new ContaDao();
             ci.Id = contaDao.Inserir(ci);
 
-            ContaInventimentoDao contaInventimentoDao = new();
+            ContaInvestimentoDao contaInventimentoDao = new();
             contaInventimentoDao.Inserir(ci);
 
             Console.WriteLine("Saldo: ");
             ci.Deposita(new Random().NextDouble() * 1000000);
-            contasInvestimentos.Add(ci);
         }
 
-        public void MostrarContaInvestimento(List<ContaInvestimento> contasInvestimentos)
+        public void MostrarContaInvestimento()
         {
             Console.WriteLine("-----CONTAS INVESTIMENTO-----");
 
-            ContaInventimentoDao contaInvestimentoDao = new();
+            ContaInvestimentoDao contaInvestimentoDao = new();
             var listarCI = contaInvestimentoDao.listarCI();
 
             foreach (var conta in listarCI)
@@ -82,7 +75,7 @@ namespace Projeto_06.Servicos
                 Console.WriteLine("2 - Editar conta");
                 Console.WriteLine("3 - Listar todas as contas");
                 Console.WriteLine("4 - Consultar conta");
-                Console.WriteLine("5 - Consultar conta");
+                Console.WriteLine("5 - Excluir conta");
                 Console.WriteLine("6 - Voltar");
                 string escolha = Console.ReadLine();
                 switch (escolha)
@@ -90,17 +83,17 @@ namespace Projeto_06.Servicos
                     case "1":
                         Console.Clear();
                         Console.WriteLine("Adicionar conta");
-                        AdicionarContaInvestimento(ContasInvestimentos);
+                        AdicionarContaInvestimento();
                         break;
                     case "2":
                         Console.Clear();
                         Console.WriteLine("Editar conta");
-                        EditarConta(ContasInvestimentos);
+                        EditarConta();
                         break;
                     case "3":
                         Console.Clear();
                         Console.WriteLine("Listar todas as contas");
-                        MostrarContaInvestimento(ContasInvestimentos);
+                        MostrarContaInvestimento();
                         Console.ReadLine();
                         break;
                     case "4":
@@ -111,7 +104,7 @@ namespace Projeto_06.Servicos
                     case "5":
                         Console.Clear();
                         Console.WriteLine("Excluir conta");
-                        ExcluirConta(ContasInvestimentos);
+                        ExcluirConta();
                         break;
                     case "6":
                         Console.WriteLine("Voltando ao Menu Principal");
@@ -125,15 +118,15 @@ namespace Projeto_06.Servicos
                 }
             }
         }
-        public void EditarConta(List<ContaInvestimento> ContasInvestimentos)
+        public void EditarConta()
         {
             Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja editar: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
-
-            ContaInvestimento ci = ContasInvestimentos.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+            var contasInvestimento = contaInvestimentoDao.listarCI();
+            ContaInvestimento ci = contasInvestimento.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (ci != null)
             {
@@ -148,28 +141,38 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o Endereço do correntista: ");
                 ci.Cliente.Endereco = Console.ReadLine();
 
+                _contaDao.Editar(ci);
             }
         }
-        public void ExcluirConta(List<ContaInvestimento> ContasInvestimentos)
+        public void ExcluirConta()
         {
+            var contasInvestimentos = contaInvestimentoDao.listarCI();
             Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja excluir: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
-            ContaInvestimento ci = ContasInvestimentos.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            ContaInvestimento ci = contasInvestimentos.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (ci != null)
             {
-                ContasInvestimentos.Remove(ci);
+                var result = contaInvestimentoDao.Excluir(ci.Id);
+                if (result)
+                    Console.WriteLine("Conta apagada com sucesso");
+                else
+                    Console.WriteLine("Não foi possivel apagar");
+                Console.ReadLine();
             }
         }
+
         public void ConsultaConta()
         {
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 
-            var conta = ContasInvestimentos.FirstOrDefault(conta => conta.NumeroDaConta == valor);
+            var listaDeContas = contaInvestimentoDao.listarCI();
+            var conta = listaDeContas.FirstOrDefault(conta => conta.NumeroDaConta == valor);
             if (conta == null)
             {
                 Console.WriteLine("A conta desejada não existe");
@@ -177,7 +180,7 @@ namespace Projeto_06.Servicos
             }
 
             Console.WriteLine("--------DADOS--------");
-            Console.WriteLine("Correntista: " + conta.Cliente);
+            Console.WriteLine("Correntista: " + conta.Cliente.Nome);
             Console.WriteLine("Agencia: " + conta.Agencia);
             Console.WriteLine("Numero da conta: " + conta.NumeroDaConta);
             Console.WriteLine("-----------------------------");

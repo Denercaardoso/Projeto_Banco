@@ -1,21 +1,15 @@
 ﻿using Projeto_06.Dao;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Projeto_06.Servicos
 {
     class ContaPoupancaService
     {
-        public static List<ContaPoupanca> ContasPoupancas { get; set; }
-        public ContaPoupancaService()
-        {
-            if (ContasPoupancas == null)
-            {
-                ContasPoupancas = new List<ContaPoupanca>();
-            }
-        }
-        public void AdicionarContaPoupanca(List<ContaPoupanca> contasPoupancas)
+        ContaDao _contaDao = new();
+
+        ContaPoupancaDao contaPoupancaDao = new();
+        public void AdicionarContaPoupanca()
         {
             ContaPoupanca cp = new ContaPoupanca();
             Console.WriteLine("Agência: ");
@@ -48,9 +42,9 @@ namespace Projeto_06.Servicos
 
             Console.WriteLine("Saldo: ");
             cp.Deposita(new Random().NextDouble() * 1000000);
-            contasPoupancas.Add(cp);
+
         }
-        public void MostrarContaPoupanca(List<ContaPoupanca> contasPoupancas)
+        public void MostrarContaPoupanca()
         {
             Console.WriteLine("-----CONTAS POUPANÇAS-----");
             ContaPoupancaDao contaPoupancaDao = new();
@@ -86,17 +80,17 @@ namespace Projeto_06.Servicos
                     case "1":
                         Console.Clear();
                         Console.WriteLine("Adicionar conta");
-                        AdicionarContaPoupanca(ContasPoupancas);
+                        AdicionarContaPoupanca();
                         break;
                     case "2":
                         Console.Clear();
                         Console.WriteLine("Editar conta");
-                        EditarConta(ContasPoupancas);
+                        EditarConta();
                         break;
                     case "3":
                         Console.Clear();
                         Console.WriteLine("Listar todas as contas");
-                        MostrarContaPoupanca(ContasPoupancas);
+                        MostrarContaPoupanca();
                         Console.ReadLine();
                         break;
                     case "4":
@@ -107,7 +101,7 @@ namespace Projeto_06.Servicos
                     case "5":
                         Console.Clear();
                         Console.WriteLine("Excluir conta");
-                        ExcluirConta(ContasPoupancas);
+                        ExcluirConta();
                         break;
                     case "6":
                         Console.WriteLine("Voltando ao Menu Principal");
@@ -121,15 +115,15 @@ namespace Projeto_06.Servicos
                 }
             }
         }
-        public void EditarConta(List<ContaPoupanca> ContasPoupancas)
+        public void EditarConta()
         {
             Console.WriteLine("-----EDITAR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja editar: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
-
-            ContaPoupanca cp = ContasPoupancas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+            var listaDeContas = contaPoupancaDao.listarCP();
+            ContaPoupanca cp = listaDeContas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (cp != null)
             {
@@ -144,28 +138,40 @@ namespace Projeto_06.Servicos
                 Console.Write("Digite o Endereço do correntista: ");
                 cp.Cliente.Endereco = Console.ReadLine();
 
+                _contaDao.Editar(cp);
+
             }
         }
-        public void ExcluirConta(List<ContaPoupanca> ContasPoupancas)
+
+        public void ExcluirConta()
         {
+            var contasPoupancas = contaPoupancaDao.listarCP();
             Console.WriteLine("-----EXCLUIR CONTA CORRENTE-----");
             Console.WriteLine("");
             Console.Write("Informe o Numero da conta que deseja excluir: ");
             int numeroConta = int.Parse(Console.ReadLine());
 
-            ContaPoupanca cp = ContasPoupancas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
+
+            ContaPoupanca cp = contasPoupancas.FirstOrDefault(a => a.NumeroDaConta == numeroConta);
 
             if (cp != null)
             {
-                ContasPoupancas.Remove(cp);
+                var result = contaPoupancaDao.Excluir(cp.Id);
+                if (result)
+                    Console.WriteLine("Conta apagada com sucesso");
+                else
+                    Console.WriteLine("Não foi possivel apagar");
+                Console.ReadLine();
             }
         }
+
         public void ConsultaConta()
         {
             Console.WriteLine("Digite a Conta que deseja consultar: ");
             int valor = int.Parse(Console.ReadLine());
 
-            var conta = ContasPoupancas.FirstOrDefault(conta => conta.NumeroDaConta == valor);
+            var ListaDeContas = contaPoupancaDao.listarCP();
+            var conta = ListaDeContas.FirstOrDefault(conta => conta.NumeroDaConta == valor);
             if (conta == null)
             {
                 Console.WriteLine("A conta desejada não existe");

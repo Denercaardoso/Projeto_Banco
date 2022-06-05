@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace Projeto_06.Dao
 {
-    class ContaInventimentoDao
+    public class ContaInvestimentoDao
     {
         Conexao conexao = new Conexao();
         SqlCommand sqlCommand = new SqlCommand();
@@ -68,6 +68,29 @@ namespace Projeto_06.Dao
                 conexao.Desconectar();
             }
             return listaContaInvestimentos;
+        }
+        public bool Excluir(int id)
+        {
+            sqlCommand.CommandText = "DELETE FROM CONTAINVESTIMENTO WHERE ID_Contas = @ID_Conta; " +
+                "DELETE FROM CONTAS WHERE ID =  @ID";
+            sqlCommand.Parameters.AddWithValue("@ID_Conta", id);
+            sqlCommand.Parameters.AddWithValue("@ID", id);
+
+            try
+            {
+                sqlCommand.Connection = conexao.Conectar();
+                sqlCommand.ExecuteNonQuery();
+                return true;
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro: " + e.Message);
+                return false;
+            }
+            finally
+            {
+                conexao.Desconectar();
+            }
         }
 
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Projeto_06.Modelo.Dao
 {
-    internal class CrudBanco 
+    internal class CrudBanco : ICrudBanco<Cliente>
     {
         Conexao conexao = new Conexao();
 
@@ -78,7 +78,7 @@ namespace Projeto_06.Modelo.Dao
         public List<Cliente> listarTodosClientes()
         {
             List<Cliente> listaClientes = new List<Cliente>();
-            Cliente clientes = null; 
+            Cliente clientes = null;
             sqlCommand.CommandText = "SELECT * FROM CLIENTE";
             try
             {
@@ -87,7 +87,7 @@ namespace Projeto_06.Modelo.Dao
                 SqlDataReader reader = sqlCommand.ExecuteReader();
                 while (reader.Read())
                 {
-                    clientes = new Cliente(); 
+                    clientes = new Cliente();
                     clientes.Nome = reader.GetString(1);
                     clientes.CPF = reader.GetString(2);
                     clientes.RG = reader.GetString(3);
@@ -105,7 +105,7 @@ namespace Projeto_06.Modelo.Dao
             }
             return listaClientes;
         }
-        public List<Cliente> listarClientesPorCpf(string CPF)
+        public Cliente listarClientesPorCpf(string CPF)
         {
             List<Cliente> listaClientes = new List<Cliente>();
             Cliente clientes = null;
@@ -135,6 +135,31 @@ namespace Projeto_06.Modelo.Dao
                 conexao.Desconectar();
             }
             return listaClientes;
+        }
+
+        public void Editar(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Excluir(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Inserir(Cliente cliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cliente listarByCpf(string CPF)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Cliente> ListarTodos()
+        {
+            throw new NotImplementedException();
         }
     }
 }

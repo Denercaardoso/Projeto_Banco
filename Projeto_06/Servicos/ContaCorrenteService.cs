@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Projeto_06.Servicos
+namespace Projeto_06.Modelo.Dao
 {
-    public class ContaCorrenteService
+    public class ContaCorrenteService 
     {
         public static List<ContaCorrente> ContasCorrentes { get; set; }
+
+        CrudConta crudConta = new CrudConta();
 
         public ContaCorrenteService()
         {
@@ -77,7 +79,16 @@ namespace Projeto_06.Servicos
                     case "1":
                         Console.Clear();
                         Console.WriteLine("Adicionar conta");
-                        AdicionarContaCorrente(ContasCorrentes);
+                        ContaCorrente cc = new ContaCorrente();
+                        Console.WriteLine("Agência: ");
+                        cc.Agencia = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Numero: ");
+                        cc.NumeroDaConta = int.Parse(Console.ReadLine());
+                        cc.Deposita(new Random().NextDouble() * 1000000);
+
+                        crudConta.CreateContaCorrente(cc);
+                        crudConta.transferirIdContaCorrente();
+
                         break;
                     case "2":
                         Console.WriteLine("Editar conta");

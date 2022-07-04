@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 
 namespace Projeto_06.Dao
 {
-    class ClienteDao
+    public class ClienteDao
     {
         Conexao conexao = new Conexao();
         SqlCommand sqlCommand = null;
@@ -100,6 +100,43 @@ namespace Projeto_06.Dao
             }
             return listaClientes;
         }
+
+        public Cliente ListarClientePorCpf(string CPF)
+        {
+            sqlCommand = new SqlCommand();
+            sqlCommand.CommandText = "SELECT * FROM CLIENTE WHERE CPF = @CPF;";
+            Cliente cliente = new Cliente();
+            sqlCommand.Parameters.AddWithValue("@CPF", CPF);
+            try
+            {
+                sqlCommand.Connection = conexao.Conectar();
+                sqlCommand.ExecuteNonQuery();
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    if (reader.Read())
+                    {
+                        cliente.Id = reader.GetInt32(0);
+                        cliente.Nome = reader.GetString(1);
+                        cliente.CPF = reader.GetString(2);
+                        cliente.RG = reader.GetString(3);
+                        cliente.Endereco = reader.GetString(4);
+                    }
+                }
+
+
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro: " + e.Message);
+            }
+            finally
+            {
+                conexao.Desconectar();
+            }
+            return cliente;
+        }
+
         public bool Excluir(Cliente cliente)
         {
             sqlCommand = new SqlCommand();
